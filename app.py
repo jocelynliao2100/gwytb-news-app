@@ -40,7 +40,7 @@ if menu == "五大欄目基本資訊":
     render_five_column_analysis()
 
 elif menu == "關鍵字分析":
-    render_keywords.py()
+    render_keywords()
 
 elif menu == "「交往交流」欄目分析":
     st.subheader("🌐 『交往交流』欄目分析")
