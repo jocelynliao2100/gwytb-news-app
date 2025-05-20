@@ -40,18 +40,7 @@ if menu == "五大欄目基本資訊":
     render_five_column_analysis()
 
 elif menu == "關鍵字分析":
-    st.subheader("🔍 關鍵字分析")
-    uploaded_file = st.file_uploader("請上傳單一 Word 檔案（含標題）", type="docx")
-    if uploaded_file:
-        doc = Document(uploaded_file)
-        titles = [p.text.strip() for p in doc.paragraphs if p.text.strip()]
-        full_text = " ".join(titles)
-        top_keywords = jieba.analyse.extract_tags(full_text, topK=20, withWeight=True)
-        keyword_df = pd.DataFrame(top_keywords, columns=["關鍵字", "權重"])
-        st.dataframe(keyword_df)
-        st.bar_chart(keyword_df.set_index("關鍵字"))
-    else:
-        st.info("請先上傳含標題的 Word 檔")
+    render_keywords.py()
 
 elif menu == "「交往交流」欄目分析":
     st.subheader("🌐 『交往交流』欄目分析")
