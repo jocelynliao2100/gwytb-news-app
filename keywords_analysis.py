@@ -54,7 +54,7 @@ def render_keywords_analysis():
         st.success(f"✅ 成功載入 {len(df)} 則新聞內容")
         st.dataframe(df)
 
-        # 全文關鍵字統計
+      # 全文關鍵字統計
         st.markdown("### 🔠 所有新聞內容關鍵字（Top 20）")
         full_text = " ".join(df["內容"].tolist())
         top_keywords = jieba.analyse.extract_tags(full_text, topK=20, withWeight=False)
