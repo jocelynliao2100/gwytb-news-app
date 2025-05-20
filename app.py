@@ -1,7 +1,7 @@
 import streamlit as st
 from five_column_view import render_five_column_analysis
 from keywords_analysis import render_keywords_analysis  
-from exchande import render_exchange
+from exchange import render_exchange_analysis  # ✅ 修正名稱
 
 # 設定首頁
 st.set_page_config(page_title="國台辦新聞稿分析", layout="wide")
@@ -15,7 +15,7 @@ menu = st.sidebar.radio("📁 選擇分析模組", [
     "「交往交流」欄目分析"
 ])
 
-# 首頁導覽說明
+# 導覽與功能切換
 if menu == "首頁":
     st.markdown("""
     歡迎使用 **國台辦新聞稿分析系統**！📊
@@ -41,4 +41,4 @@ elif menu == "關鍵字分析":
     render_keywords_analysis()
 
 elif menu == "「交往交流」欄目分析":
-    render_exchange()
+    render_exchange_analysis()
