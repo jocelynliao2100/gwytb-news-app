@@ -76,7 +76,7 @@ def render_keywords_analysis():
         for group_name, keywords in KEYWORD_CATEGORIES.items():
             st.subheader(f"📌 {group_name}")
             filtered = km_df[km_df["關鍵字"].isin(keywords)]
-            pivot = filtered.pivot(index="月份", columns="關鍵字", values="出現次數").fillna(0)
+            pivot = filtered.drop_duplicates(subset=["月份", "關鍵字"]).pivot(index="月份", columns="關鍵字", values="出現次數").fillna(0)
             st.line_chart(pivot)
 
             for keyword in keywords:
