@@ -4,7 +4,7 @@ import pandas as pd
 import jieba.analyse
 from bs4 import BeautifulSoup
 import re
-from five_column_view import render_five_column_analysis  # ✅ 匯入模組
+from five_column_view import render_five_column_analysis  # ✅ 匯入模組函式
 
 # 設定頁面
 st.set_page_config(page_title="國台辦新聞稿分析", layout="wide")
@@ -14,12 +14,12 @@ st.title("🇨🇳 國台辦新聞稿分析首頁")
 st.markdown("""
 歡迎使用 **國台辦新聞稿分析系統**！
 
-請先在左側選單中選擇你要分析的功能，並上傳對應的 Word 檔案（.docx）。
+請先在左側選單中選擇你要分析的功能，並上傳對應的 Word 檔案（.docx）或 CSV 資料。
 
 本系統提供以下三個分析模組：
 
 1. 📂 **五大欄目基本資訊**：分析五欄目新聞數量、時間分布與視覺化呈現  
-2. 🔍 **關鍵字分析**：抽取新聞標題中的政治關鍵詞並視覺化，如台獨、民進黨、賴清德和美國等
+2. 🔍 **關鍵字分析**：抽取新聞標題中的政治關鍵詞並視覺化，如台獨、民進黨、賴清德和美國等  
 3. 🌐 **「交往交流」欄目分析**：聚焦與「青年」、「台商」以及中國地點有關的關鍵字與新聞內容
 ---
 """)
@@ -33,7 +33,7 @@ menu = st.sidebar.radio("📁 選擇分析模組", [
 ])
 
 # =============================
-# 以下是三個子模組邏輯
+# 分析模組邏輯區段
 # =============================
 
 if menu == "五大欄目基本資訊":
