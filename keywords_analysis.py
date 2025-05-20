@@ -1,11 +1,12 @@
-def render_keywords_analysis():
-    import streamlit as st
-    import pandas as pd
-    from docx import Document
-    import jieba.analyse
-    import re
-    from datetime import datetime
+import streamlit as st
+import pandas as pd
+from docx import Document
+import jieba.analyse
+import re
+from datetime import datetime
 
+
+def render_keywords_analysis():
     st.title("🔍 國台辦新聞稿關鍵字分析")
 
     uploaded_files = st.file_uploader(
@@ -21,7 +22,7 @@ def render_keywords_analysis():
             doc = Document(file)
             for para in doc.paragraphs:
                 text = para.text.strip()
-                match = re.match(r"\\[(\\d{4}-\\d{2}-\\d{2})\\](.*)", text)
+                match = re.match(r"\[(\d{4}-\d{2}-\d{2})\](.*)", text)
                 if match:
                     date = match.group(1)
                     title = match.group(2).strip()
