@@ -54,11 +54,12 @@ def render_keywords_analysis():
         st.success(f"✅ 成功載入 {len(df)} 則新聞內容")
         st.dataframe(df)
 
-      # 全文關鍵字統計
+        # 全文關鍵字統計
         st.markdown("### 🔠 所有新聞內容關鍵字（Top 20）")
         full_text = " ".join(df["內容"].tolist())
-        top_keywords = jieba.analyse.extract_tags(full_text, topK=20, withWeight=False)
-        keyword_df = pd.DataFrame(Counter(full_text).most_common(20), columns=["關鍵字", "數量"])
+        words = jieba.lcut(full_text)
+        words = [w for w in words if re.match(r"[一-鿿]{2,}", w)]  # 僅保留連續兩字以上的中文詞語
+        keyword_df = pd.DataFrame(Counter(words).most_common(20), columns=["關鍵字", "數量"])
         st.bar_chart(keyword_df.set_index("關鍵字"))
 
         # 關鍵字群組分析
