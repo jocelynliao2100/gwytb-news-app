@@ -18,7 +18,7 @@ def render_five_column_analysis():
 
         required_cols = {"日期", "標題", "欄目"}
         if not required_cols.issubset(df.columns):
-            st.error("❗ 檔案中缺少必要欄位。請確認包含以下欄位：日期、標題、欄目")
+            st.error("❗ 檔案中缺少必要欄位：請確認包含「日期」「標題」「欄目」")
             return
 
         # 資料處理
@@ -38,6 +38,19 @@ def render_five_column_analysis():
         pivot = df.groupby(["月份", "欄目"]).size().reset_index(name="數量")
         pivot_wide = pivot.pivot(index="月份", columns="欄目", values="數量").fillna(0)
         st.line_chart(pivot_wide)
+
+        # 新增功能：每個欄目中新聞最多的月份與該月標題
+        st.markdown("### 📰 每個欄目新聞量最多的月份與新聞標題")
+
+        for column in sorted(df["欄目"].unique()):
+            col_df = df[df["欄目"] == column]
+            top_month = col_df["月份"].value_counts().idxmax()
+            month_str = top_month.strftime("%Y-%m")
+            top_month_df = col_df[col_df["月份"] == top_month]
+
+            with st.expander(f"📌 {column}：新聞量最多月份為 {month_str}（共 {len(top_month_df)} 篇）"):
+                for idx, row in top_month_df.iterrows():
+                    st.markdown(f"- {row['日期'].strftime('%Y-%m-%d')}：{row['標題']}")
 
     else:
         st.info("請上傳一份整理後的 CSV 檔案以開始分析。")
