@@ -1,6 +1,5 @@
 import streamlit as st
 from five_column_view import render_five_column_analysis
-from keywords import render_keywords_analysis  # ✅ 新增關鍵字分析模組
 
 # 設定首頁
 st.set_page_config(page_title="國台辦新聞稿分析", layout="wide")
@@ -37,7 +36,7 @@ elif menu == "五大欄目基本資訊":
     render_five_column_analysis()
 
 elif menu == "關鍵字分析":
-    render_keywords_analysis()
+    st.info("請使用左側選單進入「關鍵字分析」頁面（由 pages/keywords.py 自動掛載）")
 
 elif menu == "「交往交流」欄目分析":
     st.info("請使用左側選單進入「交往交流欄目分析」頁面（由 pages/*.py 自動掛載）")
