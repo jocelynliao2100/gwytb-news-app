@@ -5,9 +5,6 @@ import jieba.analyse
 from bs4 import BeautifulSoup
 import re
 
-# 匯入五大欄目模組
-from five_column_view import render_five_column_analysis
-
 # 設定頁面
 st.set_page_config(page_title="國台辦新聞稿分析", layout="wide")
 st.title("🇨🇳 國台辦新聞稿分析首頁")
