@@ -1,5 +1,8 @@
 streamlit
-python-docx
 pandas
-jieba
+python-docx
 beautifulsoup4
+jieba
+plotly
+altair
+matplotlib
