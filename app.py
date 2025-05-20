@@ -1,6 +1,6 @@
 import streamlit as st
 from five_column_view import render_five_column_analysis
-from keywords import render_keywords_analysis  # 正確模組名稱與函式名稱
+from keywords_analysis import render_keywords_analysis  # 正確模組名稱與函式名稱
 
 # 設定首頁
 st.set_page_config(page_title="國台辦新聞稿分析", layout="wide")
