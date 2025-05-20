@@ -10,12 +10,10 @@ from io import BytesIO
 from datetime import datetime
 
 def render_exchange_analysis():
-    st.set_page_config(page_title="交往交流分析", layout="wide")
-    st.title("🌐 交往交流欄目分析")
-
     uploaded_file = st.file_uploader("📂 請上傳交往交流原始 Word 檔案（含 HTML 結構）", type="docx")
 
     if uploaded_file:
+        st.title("🌐 交往交流欄目分析")
         doc = Document(uploaded_file)
         paragraphs = [p.text.strip() for p in doc.paragraphs if p.text.strip()]
 
