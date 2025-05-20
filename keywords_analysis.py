@@ -10,11 +10,11 @@ from collections import Counter
 
 # 自訂關鍵字群組
 KEYWORD_CATEGORIES = {
-    "台獨相關": ["台獨", "民進黨", "賴清德", "蔡英文", "台独", "民进党", "赖清德", "蔡英文"],
-    "國民黨相關": ["國民黨", "馬英九"],
-    "美國相關": ["美國", "美方", "美国"],
-    "經濟發展與交流相關": ["發展", "台商", "青年"],
-    "其他": ["九二共識", "兩國論", "2758"]
+    "台獨相關": [ "台独", "民进党", "赖清德", "蔡英文"],
+    "國民黨相關": ["国民党", "马英九"],
+    "美國相關": ["美方", "美国"],
+    "經濟發展與交流相關": ["发展", "台商", "青年"],
+    "其他": ["九二共识", "两国论", "2758"]
 }
 
 ALL_KEYWORDS = [kw for group in KEYWORD_CATEGORIES.values() for kw in group]
@@ -57,9 +57,9 @@ def render_keywords_analysis():
         # 全文關鍵字統計
         st.markdown("### 🔠 所有新聞內容關鍵字（Top 20）")
         full_text = " ".join(df["內容"].tolist())
-        top_keywords = jieba.analyse.extract_tags(full_text, topK=20, withWeight=True)
-        keyword_df = pd.DataFrame(top_keywords, columns=["關鍵字", "權重"])
-        st.bar_chart(keyword_df.set_index("關鍵字")[["權重"]].rename(columns={"權重": "數量"}))
+        top_keywords = jieba.analyse.extract_tags(full_text, topK=20, withWeight=False)
+        keyword_df = pd.DataFrame(Counter(full_text).most_common(20), columns=["關鍵字", "數量"])
+        st.bar_chart(keyword_df.set_index("關鍵字"))
 
         # 關鍵字群組分析
         st.markdown("### 📊 指定關鍵字群組出現趨勢分析")
