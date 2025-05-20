@@ -4,15 +4,13 @@ import pandas as pd
 import jieba.analyse
 from bs4 import BeautifulSoup
 import re
+from five_column_view import render_five_column_analysis  # ✅ 匯入模組
 
 # 設定頁面
 st.set_page_config(page_title="國台辦新聞稿分析", layout="wide")
 st.title("🇨🇳 國台辦新聞稿分析首頁")
 
 # 主頁導覽說明
-if "menu" not in st.session_state:
-    st.session_state.menu = "首頁"
-
 st.markdown("""
 歡迎使用 **國台辦新聞稿分析系統**！
 
@@ -38,11 +36,9 @@ menu = st.sidebar.radio("📁 選擇分析模組", [
 # 以下是三個子模組邏輯
 # =============================
 
-# 五大欄目（從模組呼叫）
 if menu == "五大欄目基本資訊":
     render_five_column_analysis()
 
-# 關鍵字分析（單檔）
 elif menu == "關鍵字分析":
     st.subheader("🔍 關鍵字分析")
     uploaded_file = st.file_uploader("請上傳單一 Word 檔案（含標題）", type="docx")
@@ -57,7 +53,6 @@ elif menu == "關鍵字分析":
     else:
         st.info("請先上傳含標題的 Word 檔")
 
-# 「交往交流」分析
 elif menu == "「交往交流」欄目分析":
     st.subheader("🌐 『交往交流』欄目分析")
     uploaded_file = st.file_uploader("請上傳 Word 檔案（含標題與日期）", type="docx")
