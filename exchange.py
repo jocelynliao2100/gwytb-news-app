@@ -1,7 +1,9 @@
 import streamlit as st
 import pandas as pd
 import plotly.graph_objects as go
+import plotly.express as px
 import re
+import datetime
 from collections import defaultdict
 from docx import Document
 
@@ -16,10 +18,21 @@ def render_exchange_analysis():
         
         # 🔧 修正亂碼：清理 HTML 標籤、空白、只保留有日期或完整中文標題
         titles = []
+        titles_with_date = []  # 用於儲存帶有日期的標題
+        
         for line in paragraphs:
             clean_line = re.sub(r"<[^>]+>", "", line)  # 去除 HTML 標籤
             clean_line = clean_line.replace(" ", "").strip()  # 去除全形空格與空白
-            if re.match(r"^\[\s?20\d{2}-\d{2}-\d{2}\s?\]", clean_line) or re.search(r"[\u4e00-\u9fff]{4,}", clean_line):
+            
+            # 提取日期和標題
+            date_match = re.search(r"\[\s?(20\d{2}-\d{2}-\d{2})\s?\]", clean_line)
+            if date_match:
+                date_str = date_match.group(1)
+                title_text = re.sub(r"\[\s?20\d{2}-\d{2}-\d{2}\s?\]", "", clean_line).strip()
+                if len(re.sub(r"[^\u4e00-\u9fff]", "", title_text)) >= 4:
+                    titles.append(clean_line)
+                    titles_with_date.append((date_str, title_text))
+            elif re.search(r"[\u4e00-\u9fff]{4,}", clean_line):
                 if len(re.sub(r"[^\u4e00-\u9fff]", "", clean_line)) >= 4:
                     titles.append(clean_line)
         
@@ -53,13 +66,88 @@ def render_exchange_analysis():
         st.markdown("### 🎯 六類活動類別統計")
         st.dataframe(df_summary)
         
+        # 處理帶有日期的標題，用於繪製時間趨勢圖
+        date_category_data = []
+        
+        for date_str, title_text in titles_with_date:
+            try:
+                date_obj = datetime.datetime.strptime(date_str, "%Y-%m-%d")
+                # 將日期轉換為年月格式
+                year_month = date_obj.strftime("%Y-%m")
+                
+                # 分類該標題
+                category = classify(title_text)
+                
+                # 儲存日期、類別和標題
+                if category != "未分類":
+                    date_category_data.append((year_month, category, title_text))
+            except ValueError:
+                # 如果日期格式不正確，則跳過
+                continue
+                
+        # 建立時間趨勢數據
+        time_trend_data = defaultdict(lambda: defaultdict(int))
+        
+        for year_month, category, _ in date_category_data:
+            time_trend_data[year_month][category] += 1
+            
+        # 轉換為DataFrame，用於繪製圖表
+        time_trend_rows = []
+        
+        for year_month, categories in time_trend_data.items():
+            for category, count in categories.items():
+                time_trend_rows.append({
+                    "年月": year_month,
+                    "類別": category,
+                    "數量": count
+                })
+                
+        if time_trend_rows:
+            df_time_trend = pd.DataFrame(time_trend_rows)
+            
+            # 確保日期排序正確
+            df_time_trend["年月"] = pd.to_datetime(df_time_trend["年月"])
+            df_time_trend = df_time_trend.sort_values("年月")
+            df_time_trend["年月"] = df_time_trend["年月"].dt.strftime("%Y-%m")
+            
+            # 透過樞紐表將資料轉換為適合繪製折線圖的格式
+            pivot_df = pd.pivot_table(
+                df_time_trend,
+                index="年月", 
+                columns="類別", 
+                values="數量", 
+                fill_value=0
+            ).reset_index()
+            
+            # 繪製時間趨勢折線圖
+            st.markdown("### 📈 六類活動時間趨勢")
+            
+            fig_trend = go.Figure()
+            
+            for category in pivot_df.columns[1:]:  # 第一列是年月，從第二列開始是各類別
+                fig_trend.add_trace(go.Scatter(
+                    x=pivot_df["年月"],
+                    y=pivot_df[category],
+                    mode="lines+markers",
+                    name=category,
+                    connectgaps=True
+                ))
+                
+            fig_trend.update_layout(
+                title="六類活動隨時間變化",
+                xaxis_title="年月",
+                yaxis_title="活動數量",
+                legend_title="活動類別",
+                height=500
+            )
+            
+            st.plotly_chart(fig_trend, use_container_width=True)
+        
         st.markdown("### 📰 活動標題彙整（依分類）")
         for cat in df_detail["分類"].unique():
             with st.expander(f"{cat} 的活動標題"):
                 for t in df_detail[df_detail["分類"] == cat]["標題"]:
                     st.markdown(f"- {t}")
-        
-        st.markdown("### 📍 中國地名熱點圖")
         
         data = {
             "地点": [
