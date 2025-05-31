@@ -12,9 +12,9 @@ from collections import Counter
 KEYWORD_CATEGORIES = {
     "台獨相關": [ "台独", "民进党", "赖清德", "蔡英文"],
     "國民黨相關": ["国民党", "马英九"],
-    "美國相關": ["美方", "美国"],
+    "美國相關": ["美方", "美国","特朗普","拜登"],
     "經濟發展與交流相關": ["发展", "台商", "青年"],
-    "其他": ["九二共识", "两国论", "2758"]
+    "其他": ["九二共识", "两国论", "2758","一国两制"]
 }
 
 ALL_KEYWORDS = [kw for group in KEYWORD_CATEGORIES.values() for kw in group]
